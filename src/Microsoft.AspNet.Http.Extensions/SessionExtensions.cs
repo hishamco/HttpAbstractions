@@ -51,5 +51,20 @@ namespace Microsoft.AspNet.Http
             session.TryGetValue(key, out value);
             return value;
         }
+
+        public static void Set(this ISessionCollection session, string key, byte[] value)
+        {
+            session.Set(key, new ArraySegment<byte>(value));
+        }
+        
+        public static T Get<T>(this ISessionCollection session, string key, ISessionFormatter<T> formatter)
+        {
+            return formatter.Deserialize(session.Get(key));
+        }
+
+        public static void Set<T>(this ISessionCollection session, string key, T value, ISessionFormatter<T> formatter)
+        {
+            session.Set(key, formatter.Serialize(value));
+        }
     }
 }
